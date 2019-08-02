@@ -132,3 +132,13 @@ the default configuration
 
 The default configurations and resources can be found in `<HOME>/resources`
 
+### Samples
+
+Help
+![](readmeresources/log-configurer-help.gif)
+
+Search
+![](readmeresources/search-defaultconfig.gif)
+
+Update
+![](readmeresources/update-default-config.gif)
