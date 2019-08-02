@@ -4,7 +4,7 @@ import com.wso2.loggingremote.client.LoggingAdminServiceClient;
 import com.wso2.loggingremote.client.LoginAdminServiceClient;
 import com.wso2.loggingremote.modal.ServerConfig;
 import com.wso2.loggingremote.modal.UpdateLoggerConfig;
-import com.wso2.loggingremote.util.CommonUtil;
+import com.wso2.loggingremote.util.Constants;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.lang.StringUtils;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
@@ -17,11 +17,24 @@ public class LoggingService {
 
     public void listLogs(ServerConfig configurations, String logName, boolean startsWith) {
         LoginAdminServiceClient authclient;
+        String session = "";
         try {
-            //CommonUtil.initialize(configurations.getSystemProperties());
             authclient = new LoginAdminServiceClient(configurations.getHostname());
-            String session = authclient.authenticate(configurations.getUsername(),
+            session = authclient.authenticate(configurations.getUsername(),
                     configurations.getPassword(), configurations.getHostname());
+            if (session == null) {
+                System.out.println(Constants.LOGGING_IN_FAILED_TEXT);
+                return;
+            }
+        } catch (RemoteException e) {
+            System.out.println(Constants.LOGGING_IN_FAILED_TEXT);
+            return;
+        } catch (LoginAuthenticationExceptionException e) {
+            System.out.println(Constants.LOGGING_IN_FAILED_TEXT);
+            return;
+        }
+
+        try {
             LoggingAdminServiceClient loggingAdminServiceClient = new LoggingAdminServiceClient(configurations.getHostname(), session);
             LoggingAdminStub.GetAllLoggerDataResponse logDataList =
                     loggingAdminServiceClient.searchByLogName(logName, startsWith);
@@ -35,97 +48,76 @@ public class LoggingService {
             } else {
                 System.out.println("No matching loggers found");
             }
-
             authclient.logOut();
         } catch (AxisFault axisFault) {
-            axisFault.printStackTrace();
+            System.out.println("Searching failed");
+            return;
         } catch (RemoteException e) {
-            e.printStackTrace();
-        } catch (LoginAuthenticationExceptionException e) {
-            e.printStackTrace();
+            System.out.println(Constants.LOGGING_OUT_FAILED_TEXT);
+            return;
         } catch (LogoutAuthenticationExceptionException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void updateLogs(ServerConfig serverConfig, UpdateLoggerConfig loggerConfig) {
-        LoginAdminServiceClient authclient;
-        try {
-            //CommonUtil.initialize(serverConfig.getSystemProperties());
-
-            System.out.println("Logging service started..\n");
-
-            authclient = new LoginAdminServiceClient(serverConfig.getHostname());
-            String session = authclient.authenticate(serverConfig.getUsername(),
-                    serverConfig.getPassword(), serverConfig.getHostname());
-
-            System.out.println("User authenticated successfully!\n");
-            System.out.println("Reading logger changes from file...\n");
-
-            LoggingAdminServiceClient loggingAdminServiceClient =
-                    new LoggingAdminServiceClient(serverConfig.getHostname(), session);
-
-            updateLogsAbs(loggerConfig, loggingAdminServiceClient);
-
-            authclient.logOut();
-
-            System.out.println("User logged out successfully");
-        } catch (AxisFault axisFault) {
-            axisFault.printStackTrace();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        } catch (LoginAuthenticationExceptionException e) {
-            e.printStackTrace();
-        } catch (LogoutAuthenticationExceptionException e) {
-            e.printStackTrace();
+            System.out.println(Constants.LOGGING_OUT_FAILED_TEXT);
+            return;
         }
     }
 
     public void updateLogs(ServerConfig serverConfig, UpdateLoggerConfig[] loggerBulkConfig) {
         LoginAdminServiceClient authclient;
+        System.out.println("Logging service started..\n");
+
+        String session = "";
         try {
-            //CommonUtil.initialize(serverConfig.getSystemProperties());
-
-            System.out.println("Logging service started..\n");
-
             authclient = new LoginAdminServiceClient(serverConfig.getHostname());
-            String session = authclient.authenticate(serverConfig.getUsername(),
+            session = authclient.authenticate(serverConfig.getUsername(),
                     serverConfig.getPassword(), serverConfig.getHostname());
-
+            if (session == null) {
+                System.out.println(Constants.LOGGING_IN_FAILED_TEXT);
+                return;
+            }
             System.out.println("User authenticated successfully!\n");
-            System.out.println("Reading logger changes from file...\n");
+        } catch (RemoteException e) {
+            System.out.println(Constants.LOGGING_IN_FAILED_TEXT);
+            return;
+        } catch (LoginAuthenticationExceptionException e) {
+            System.out.println(Constants.LOGGING_IN_FAILED_TEXT);
+            return;
+        }
 
+        try {
+            System.out.println("Reading logger changes from file...\n");
             LoggingAdminServiceClient loggingAdminServiceClient =
                     new LoggingAdminServiceClient(serverConfig.getHostname(), session);
 
             for (UpdateLoggerConfig loggerConfig : loggerBulkConfig) {
-                updateLogsAbs(loggerConfig, loggingAdminServiceClient);
+                if(!updateLogsAbs(loggerConfig, loggingAdminServiceClient)){
+                    System.out.println(Constants.UPDATE_FAILED_TEXT);
+                }
             }
 
             System.out.println("Logs updated successfully!\n");
-
             authclient.logOut();
-
             System.out.println("User logged out successfully");
         } catch (AxisFault axisFault) {
-            axisFault.printStackTrace();
+            System.out.println("Updating failed!");
+            return;
         } catch (RemoteException e) {
-            e.printStackTrace();
-        } catch (LoginAuthenticationExceptionException e) {
-            e.printStackTrace();
+            System.out.println(Constants.LOGGING_OUT_FAILED_TEXT);
+            return;
         } catch (LogoutAuthenticationExceptionException e) {
-            e.printStackTrace();
+            System.out.println(Constants.LOGGING_OUT_FAILED_TEXT);
+            return;
         }
     }
 
-    private void updateLogsAbs(UpdateLoggerConfig loggerConfig, LoggingAdminServiceClient loggingAdminServiceClient) {
+    private boolean updateLogsAbs(UpdateLoggerConfig loggerConfig, LoggingAdminServiceClient loggingAdminServiceClient) {
+        boolean result = false;
         if (StringUtils.isEmpty(loggerConfig.getLoggerName())) {
             System.out.println("Specify logger name");
-            return;
+            return false;
         }
         if (StringUtils.isEmpty(loggerConfig.getLoggerLevel()) && loggerConfig.isAdditivity() == null) {
             System.out.println("Specify log level or additivity to update in logger " + loggerConfig.getLoggerName());
-            return;
+            return false;
         }
         if (StringUtils.isEmpty(loggerConfig.getLoggerLevel())) {
             System.out.println("Logger level not specified. Fetching current logger level..");
@@ -138,9 +130,11 @@ public class LoggingService {
             System.out.println("Fetching additivity successful!");
         }
 
-        loggingAdminServiceClient.updateLogLevel(loggerConfig.getLoggerName(), loggerConfig.getLoggerLevel(), loggerConfig.isAdditivity());
+        result = loggingAdminServiceClient.updateLogLevel(loggerConfig.getLoggerName(), loggerConfig.getLoggerLevel(), loggerConfig.isAdditivity());
 
-        System.out.println("Log updated successfully for "+loggerConfig.getLoggerName());
+        System.out.println("Log updated successfully for " + loggerConfig.getLoggerName());
+
+        return result;
     }
 
 }

@@ -202,28 +202,40 @@ public class CommonUtil {
     }
 
     public static void printHelp() {
-        System.out.println("Welcome to wso2 remote log enable service..");
-        System.out.println("\nTo search for logs use the following command");
-        System.out.println("\tjava -jar logging-remote.jar --search {logger phrase (string)} {starts with (boolean)}");
-        //TODO: create the full help log
+        System.out.println("Welcome to wso2-log-configurer..");
+        System.out.println("\nTo search for logs use the following commands");
+        System.out.println("\tjava -jar x.jar --config <serverconfig>.json search <search phrase>");
+        System.out.println("\tjava -jar x.jar search <search phrase>");
+        System.out.println("\tjava -jar x.jar search <search phrase> --starts-with");
+        System.out.println("\nTo update logs use the following commands");
+        System.out.println("\tjava -jar x.jar --config <serverconfig>.json update <updateloggers>.json");
+        System.out.println("\tjava -jar x.jar update <updateloggers>.json");
+        System.out.println("\nUsing --config you can specify server configuration from a custom location");
+        System.out.println("If server configuration is not specified,");
+        System.out.println("\t1. Configurations will be loaded from environment variables");
+        System.out.println("\t1. Missing configurations will be loaded from default configurations");
+        System.out.println("\nIf you wish to pass the passwords with the arguments,");
+        System.out.println("\tUse --upassword <user password> and --kpassword <keystore password> at the end of above commands");
+        System.out.println("\teg: java -jar x.jar search AUDIT --upassword admin --kpassword wso2carbon");
     }
 
     public static void printUpdateErrors() {
-        System.out.println("Please provide path for server configurations and logger configurations");
-        System.out.println("Proper format");
-        System.out.println("\t--update <serverConfig> <loggerConfig>");
+        System.out.println("\nTo update logs use the following commands");
+        System.out.println("\tjava -jar x.jar --config <serverconfig>.json update <updateloggers>.json");
+        System.out.println("\tjava -jar x.jar update <updateloggers>.json");
+        System.out.println("For more details run the application with --help");
+    }
+
+    public static void printSearchErrors() {
+        System.out.println("\nTo search for logs use the following commands");
+        System.out.println("\tjava -jar x.jar --config <serverconfig>.json search <search phrase>");
+        System.out.println("\tjava -jar x.jar search <search phrase>");
+        System.out.println("\tjava -jar x.jar search <search phrase> --starts-with");
         System.out.println("For more details run the application with --help");
     }
 
     public static void printCommonErrors() {
         System.out.println("Please provide a valid command");
-        System.out.println("For more details run the application with --help");
-    }
-
-    public static void printSearchErrors() {
-        System.out.println("Please provide path for server configurations and logger configurations");
-        System.out.println("Proper format");
-        System.out.println("\t--update <serverConfig> <logger_phrase> <starts_with>");
         System.out.println("For more details run the application with --help");
     }
 }

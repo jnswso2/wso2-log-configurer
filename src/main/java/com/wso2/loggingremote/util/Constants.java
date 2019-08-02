@@ -18,4 +18,9 @@ public class Constants {
     public static final String UPDATE_TEXT = "update";
     public static final String KEYSTORE_PASSWORD = "--kpassword";
     public static final String USER_PASSWORD = "--upassword";
+
+    //texts
+    public static final String LOGGING_IN_FAILED_TEXT = "Logging in failed!";
+    public static final String LOGGING_OUT_FAILED_TEXT = "Logging out failed";
+    public static final String UPDATE_FAILED_TEXT = "Update failed";
 }

@@ -15,14 +15,13 @@ public class LoggerMain {
                 CommonUtil.printHelp();
             } else if (args[0].equalsIgnoreCase(Constants.CONFIG_TEXT) && args.length > 2) {
                 serverConfig = CommonUtil.loadServerConfig(args[1]);
-                //PASSWORDS
                 CommonUtil.initialize(serverConfig.getSystemProperties());
                 serverConfig = CommonUtil.updatePasswords(serverConfig, args);
                 if (CommonUtil.argsLengthBeforePasswords(args) == 5 && args[2].equalsIgnoreCase(Constants.SEARCH_TEXT)) {
                     if (args[4].equalsIgnoreCase(Constants.STARTS_WITH_TEXT)) {
                         loggingService.listLogs(serverConfig, args[3], true);
                     } else {
-                        //TODO:SEARCH HELP
+                        CommonUtil.printSearchErrors();
                     }
                 } else if (CommonUtil.argsLengthBeforePasswords(args) == 4 && args[2].equalsIgnoreCase(Constants.SEARCH_TEXT)) {
                     loggingService.listLogs(serverConfig, args[3], false);
@@ -30,7 +29,6 @@ public class LoggerMain {
                     loggingService.updateLogs(serverConfig, CommonUtil.loadBulkLoggerConfig(args[3]));
                 }
             } else if (args[0].equalsIgnoreCase(Constants.SEARCH_TEXT) && args.length > 1) {
-                //TODO: PASSWORDS
                 serverConfig = CommonUtil.initializeWithEnv(serverConfig);
                 serverConfig = CommonUtil.updatePasswords(serverConfig, args);
                 if (CommonUtil.argsLengthBeforePasswords(args) == 2) {
@@ -38,16 +36,15 @@ public class LoggerMain {
                 } else if (CommonUtil.argsLengthBeforePasswords(args) == 3 && args[2].equalsIgnoreCase(Constants.STARTS_WITH_TEXT)) {
                     loggingService.listLogs(serverConfig, args[1], true);
                 } else {
-                    //TODO:SEARCH HELP
+                    CommonUtil.printSearchErrors();
                 }
             } else if (args[0].equalsIgnoreCase(Constants.UPDATE_TEXT) && args.length > 1) {
-                //TODO: PASSWORDS
                 serverConfig = CommonUtil.initializeWithEnv(serverConfig);
                 serverConfig = CommonUtil.updatePasswords(serverConfig, args);
                 if (CommonUtil.argsLengthBeforePasswords(args) == 2) {
                     loggingService.updateLogs(serverConfig, CommonUtil.loadBulkLoggerConfig(args[1]));
                 } else {
-                    //TODO:UPDATE HELP
+                    CommonUtil.printUpdateErrors();
                 }
             }
 

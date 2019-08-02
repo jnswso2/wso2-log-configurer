@@ -5,8 +5,6 @@ import com.wso2.loggingremote.util.LoggerNotFoundException;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
-import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
-import org.wso2.carbon.authenticator.stub.LogoutAuthenticationExceptionException;
 import org.wso2.carbon.logging.service.LoggingAdminException;
 import org.wso2.carbon.logging.service.LoggingAdminStub;
 
@@ -50,9 +48,9 @@ public class LoggingAdminServiceClient {
         return resp;
     }
 
-    public LoggingAdminStub.GetLoggerDataResponse getCurrentLoggerDetails( String loggerName ) {
+    public LoggingAdminStub.GetLoggerDataResponse getCurrentLoggerDetails(String loggerName) {
         LoggingAdminStub.GetLoggerDataResponse resp = new LoggingAdminStub.GetLoggerDataResponse();
-        try{
+        try {
             LoggingAdminStub.GetLoggerData loggerData = new LoggingAdminStub.GetLoggerData();
             loggerData.setLoggerName(loggerName);
             resp = this.loggingAdminStub.getLoggerData(loggerData);
@@ -72,6 +70,7 @@ public class LoggingAdminServiceClient {
             loggerData.setAdditivity(additivity);
             loggerData.setPersist(true);
             this.loggingAdminStub.updateLoggerData(loggerData);
+            result = true;
         } catch (RemoteException e) {
             e.printStackTrace();
         } catch (LoggingAdminException e) {
@@ -80,33 +79,6 @@ public class LoggingAdminServiceClient {
             e.printStackTrace();
         }
         return result;
-    }
-
-    public static void main(String[] args) {
-        LoginAdminServiceClient authclient;
-        try {
-            System.setProperty("javax.net.ssl.trustStore","/engagements/mas/wso2-products/wso2ei-6.2.0/repository/resources/security/wso2carbon.jks");
-            System.setProperty("javax.net.ssl.trustStorePassword","wso2carbon");
-            System.setProperty("javax.net.ssl.trustStoreType","JKS");
-
-            authclient = new LoginAdminServiceClient("https://localhost:9444");
-            String session = authclient.authenticate("admin", "admin","https://localhost:9444");
-
-            LoggingAdminServiceClient loggingAdminServiceClient = new LoggingAdminServiceClient("https://localhost:9444", session);
-            loggingAdminServiceClient.searchByLogName("", false);
-            loggingAdminServiceClient.updateLogLevel("AUDIT_LOG","OFF",false);
-
-            authclient.logOut();
-
-        } catch (AxisFault axisFault) {
-            axisFault.printStackTrace();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        } catch (LoginAuthenticationExceptionException e) {
-            e.printStackTrace();
-        } catch (LogoutAuthenticationExceptionException e) {
-            e.printStackTrace();
-        }
     }
 
 }
