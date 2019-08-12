@@ -5,6 +5,7 @@ This java application is to overcome the problem of not having a GUI to change l
 * Running WSO2 product where you can access admin log service.
 * Maven
 * Java (1.8+)
+
 ### Configurations
 Default server configurations are stored in ``<HOME>/src/main/resources/serverconfig.json``
 You can change the configurations accordingly.
@@ -15,41 +16,46 @@ Use the terminal and go to the home file location
 
 Execute the command ``mvn clean package``
 
-Now copy the `wso2-log-configurer-jar-with-dependencies.jar` file to
-a preferred location with a preferred name(wso2-log-configurer.jar). 
+Find the `wso2-log-configurer.jar` jar file inside the `target` directory which
+you can copy to a preferred location in your file system.
 
 ### Run
 
 You can execute the following command to see how to use the tool.
 
-`java -jar wso2-logger-configurer.jar --help`
+`java -jar wso2-log-configurer.jar --help`
 
-### 
+###
 
 ### Available commands
 
-All commands start with `java -jar wso2-logger-configurer.jar`
+All commands start with `java -jar wso2-log-configurer.jar`
 
-Default server configuration
+*NOTE*: Default server configuration is using the default HTTPS port (9443) of a locally
+        running WSO2 server. Copy the default key store file to the location you are
+        running the jar file and you should be able to successfully execute following
+        commands.
+
 ```
 search <search phrase>
 search <search phrase> --starts-with
 
 update <update-log>.json
-``` 
+```
+
 #### Passing custom server configuration
 
-Create a json in the following format and save it
+Create a json in the following format and save it as `serverconfig.json`
 
 ```json
 {
-  "hostname":"https://localhost:9440",
+  "hostname":"https://localhost:9443",
   "username":"admin",
   "password":"admin",
   "systemProperties" : [
     {
       "key":"javax.net.ssl.trustStore",
-      "value":"/engagements/mas/wso2-products/wso2ei-6.2.0/repository/resources/security/wso2carbon.jks"
+      "value":"<PATH>/wso2carbon.jks"
     },
     {
       "key":"javax.net.ssl.trustStorePassword",
@@ -66,7 +72,7 @@ Now you can use `--config` command to pass the custom configuration.
 
 Example:
 
-``java -jar wso2-logger-configurer.jar --config serverconfig.jar search AUDIT``
+``java -jar wso2-log-configurer.jar --config serverconfig.json search AUDIT``
 
 #### Update logs JSON file
 
@@ -106,11 +112,11 @@ Sensitive properties (passwords) can be passed after the above commands
 
 ```
 --upassword <user password> --kpassword <keystore password>
-``` 
+```
 
 Example:
 
-`java -jar wso2-logger-configurer.jar search AUDIT --upassword admin`
+`java -jar wso2-log-configurer.jar search AUDIT --upassword admin`
 
 _Single or both passwords can be passed in any order after the arguments are passed_
 
@@ -122,7 +128,7 @@ the default configuration
 | Environment variable              | JSON configuration name           |
 | --------------------------------- | --------------------------------- |
 | server.hostname                   | hostname                          |
-| server.username                   | username                          | 
+| server.username                   | username                          |
 | server.password                   | password                          |
 | javax.net.ssl.trustStore          | javax.net.ssl.trustStore          |
 | javax.net.ssl.trustStorePassword  | javax.net.ssl.trustStorePassword  |
