@@ -63,7 +63,7 @@ public class LoggingService {
 
     public void updateLogs(ServerConfig serverConfig, UpdateLoggerConfig[] loggerBulkConfig) {
         LoginAdminServiceClient authclient;
-        System.out.println("Logging service started..\n");
+        System.out.println("Logging service started..");
 
         String session = "";
         try {
@@ -74,7 +74,7 @@ public class LoggingService {
                 System.out.println(Constants.LOGGING_IN_FAILED_TEXT);
                 return;
             }
-            System.out.println("User authenticated successfully!\n");
+            System.out.println("User authenticated successfully!");
         } catch (RemoteException e) {
             System.out.println(Constants.LOGGING_IN_FAILED_TEXT);
             return;
@@ -84,7 +84,7 @@ public class LoggingService {
         }
 
         try {
-            System.out.println("Reading logger changes from file...\n");
+            System.out.println("Reading logger changes from file...");
             LoggingAdminServiceClient loggingAdminServiceClient =
                     new LoggingAdminServiceClient(serverConfig.getHostname(), session);
 
@@ -94,7 +94,7 @@ public class LoggingService {
                 }
             }
 
-            System.out.println("Logs updated successfully!\n");
+            System.out.println("Logs updated successfully!");
             authclient.logOut();
             System.out.println("User logged out successfully");
         } catch (AxisFault axisFault) {
