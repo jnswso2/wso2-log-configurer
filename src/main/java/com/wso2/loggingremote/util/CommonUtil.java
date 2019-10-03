@@ -215,7 +215,7 @@ public class CommonUtil {
         System.out.println("\nUsing --config you can specify server configuration from a custom location");
         System.out.println("If server configuration is not specified,");
         System.out.println("\t1. Configurations will be loaded from environment variables");
-        System.out.println("\t1. Missing configurations will be loaded from default configurations");
+        System.out.println("\t2. Missing configurations will be loaded from default configurations");
         System.out.println("\nIf you wish to pass the passwords with the arguments,");
         System.out.println("\tUse --upassword <user password> and --kpassword <keystore password> at the end of above commands");
         System.out.println("\teg: java -jar x.jar search AUDIT --upassword admin --kpassword wso2carbon");

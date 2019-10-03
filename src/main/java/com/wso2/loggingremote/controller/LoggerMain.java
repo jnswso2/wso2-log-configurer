@@ -18,34 +18,33 @@ public class LoggerMain {
         HashMap<String, String> params = new HashMap<String, String>();
         try {
             if (args.length > 0) {
-                String paramList[] = {Constants.CONFIG_TEXT, Constants.STARTS_WITH_TEXT, Constants.KEYSTORE_PASSWORD, Constants.USER_PASSWORD, Constants.SEARCH_TEXT, Constants.UPDATE_TEXT};
-                List tempList = Arrays.asList(args);
-                try {
-                    for (String stringValue : paramList) {
-                        if (tempList.contains(stringValue)) {
-                            String value = null;
-                            if (stringValue.equals(Constants.STARTS_WITH_TEXT)) {
-                                value = "TRUE";
-                            } else {
-                                value = args[tempList.indexOf(stringValue) + 1];
-                            }
-                            params.put(stringValue, value);
-                        }
-                    }
-                } catch (ArrayIndexOutOfBoundsException ex) {
-                    if (tempList.contains(Constants.UPDATE_TEXT)) {
-                        CommonUtil.printUpdateErrors();
-                    } else {
-                        CommonUtil.printSearchErrors();
-                    }
-                } catch (Exception e) {
-                    CommonUtil.printCommonErrors();
-                }
-
                 if (args[0].equalsIgnoreCase(Constants.HELP_TEXT)) {
                     CommonUtil.printHelp();
 
                 } else {
+                    String paramList[] = {Constants.CONFIG_TEXT, Constants.STARTS_WITH_TEXT, Constants.KEYSTORE_PASSWORD, Constants.USER_PASSWORD, Constants.SEARCH_TEXT, Constants.UPDATE_TEXT};
+                    List tempList = Arrays.asList(args);
+                    try {
+                        for (String stringValue : paramList) {
+                            if (tempList.contains(stringValue)) {
+                                String value = null;
+                                if (stringValue.equals(Constants.STARTS_WITH_TEXT)) {
+                                    value = "TRUE";
+                                } else {
+                                    value = args[tempList.indexOf(stringValue) + 1];
+                                }
+                                params.put(stringValue, value);
+                            }
+                        }
+                    } catch (ArrayIndexOutOfBoundsException ex) {
+                        if (tempList.contains(Constants.UPDATE_TEXT)) {
+                            CommonUtil.printUpdateErrors();
+                        } else {
+                            CommonUtil.printSearchErrors();
+                        }
+                    } catch (Exception e) {
+                        CommonUtil.printCommonErrors();
+                    }
 
                     if (params.get(Constants.CONFIG_TEXT) != null) {
                         serverConfig = CommonUtil.loadServerConfig(params.get(Constants.CONFIG_TEXT));
@@ -64,10 +63,12 @@ public class LoggerMain {
                         CommonUtil.printCommonErrors();
                     }
                 }
+            } else {
+                CommonUtil.printCommonErrors();
             }
         } catch (Exception exception) {
             System.out.print(Constants.ERROR_PRE_FIX);
-            System.out.println("Error Occured while executing the application " + exception.getMessage());
+            System.out.println(exception.getMessage() + " while executing the application " + exception.getStackTrace());
         }
     }
 }
