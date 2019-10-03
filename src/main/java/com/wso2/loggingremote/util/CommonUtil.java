@@ -53,12 +53,18 @@ public class CommonUtil {
         }
         if (System.getenv(Constants.SERVER_HOSTNAME) != null) {
             config.setHostname(System.getenv(Constants.SERVER_HOSTNAME));
+        } else if (System.getProperty(Constants.SERVER_HOSTNAME) != null) {
+            config.setHostname(System.getProperty(Constants.SERVER_HOSTNAME));
         }
         if (System.getenv(Constants.SERVER_USERNAME) != null) {
             config.setHostname(System.getenv(Constants.SERVER_USERNAME));
+        } else if (System.getProperty(Constants.SERVER_USERNAME) != null) {
+            config.setHostname(System.getProperty(Constants.SERVER_USERNAME));
         }
         if (System.getenv(Constants.SERVER_PASSWORD) != null) {
             config.setHostname(System.getenv(Constants.SERVER_PASSWORD));
+        } else if (System.getProperty(Constants.SERVER_PASSWORD) != null) {
+            config.setHostname(System.getProperty(Constants.SERVER_PASSWORD));
         }
 
         return config;
