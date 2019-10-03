@@ -1,6 +1,7 @@
 package com.wso2.loggingremote.client;
 
 import com.wso2.loggingremote.util.CommonUtil;
+import com.wso2.loggingremote.util.Constants;
 import com.wso2.loggingremote.util.LoggerNotFoundException;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.client.Options;
@@ -42,7 +43,8 @@ public class LoggingAdminServiceClient {
             resp = this.loggingAdminStub.getAllLoggerData(loggerData);
 
         } catch (RemoteException e) {
-            e.printStackTrace();
+            System.out.print(Constants.ERROR_PRE_FIX);
+            System.out.println(e.getStackTrace());
         }
 
         return resp;
@@ -55,7 +57,8 @@ public class LoggingAdminServiceClient {
             loggerData.setLoggerName(loggerName);
             resp = this.loggingAdminStub.getLoggerData(loggerData);
         } catch (RemoteException e) {
-            e.printStackTrace();
+            System.out.print(Constants.ERROR_PRE_FIX);
+            System.out.print(e.getMessage());
         }
         return resp;
     }
@@ -72,11 +75,14 @@ public class LoggingAdminServiceClient {
             this.loggingAdminStub.updateLoggerData(loggerData);
             result = true;
         } catch (RemoteException e) {
-            e.printStackTrace();
+            System.out.print(Constants.ERROR_PRE_FIX);
+            System.out.println(e.getStackTrace());
         } catch (LoggingAdminException e) {
-            e.printStackTrace();
+            System.out.print(Constants.ERROR_PRE_FIX);
+            System.out.println(e.getStackTrace());
         } catch (LoggerNotFoundException e) {
-            e.printStackTrace();
+            System.out.print(Constants.ERROR_PRE_FIX);
+            System.out.println(e.getStackTrace());
         }
         return result;
     }

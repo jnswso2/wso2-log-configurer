@@ -24,4 +24,5 @@ public class Constants {
     public static final String LOGGING_IN_FAILED_TEXT = "Logging in failed!";
     public static final String LOGGING_OUT_FAILED_TEXT = "Logging out failed";
     public static final String UPDATE_FAILED_TEXT = "Update failed";
+    public static final String ERROR_PRE_FIX = "[Error]\t\t";
 }

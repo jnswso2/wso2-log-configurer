@@ -1,5 +1,6 @@
 package com.wso2.loggingremote.client;
 
+import com.wso2.loggingremote.util.Constants;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ServiceContext;
 import org.apache.axis2.transport.http.HTTPConstants;
@@ -31,6 +32,7 @@ public class LoginAdminServiceClient {
                     _getServiceClient().getLastOperationContext().getServiceContext();
             sessionCookie = (String) serviceContext.getProperty(HTTPConstants.COOKIE_STRING);
         } else {
+            System.out.print(Constants.ERROR_PRE_FIX);
             System.out.println("Authentication error");
         }
 
