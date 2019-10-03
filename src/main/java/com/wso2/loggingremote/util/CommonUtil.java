@@ -168,6 +168,8 @@ public class CommonUtil {
         return configurations;
     }
 
+    // todo modify the code
+
     public static ServerConfig updatePasswords(ServerConfig config, String[] args) {
         for (int i = 0; i < args.length; i++) {
             if (args[i].equalsIgnoreCase(Constants.KEYSTORE_PASSWORD)) {

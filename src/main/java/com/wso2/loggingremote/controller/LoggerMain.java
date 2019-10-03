@@ -5,52 +5,64 @@ import com.wso2.loggingremote.service.LoggingService;
 import com.wso2.loggingremote.util.CommonUtil;
 import com.wso2.loggingremote.util.Constants;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class LoggerMain {
     public static void main(String[] args) {
         ServerConfig serverConfig = CommonUtil.loadDefaultServerConfig();
         CommonUtil.initialize(serverConfig.getSystemProperties());
         LoggingService loggingService = new LoggingService();
+        HashMap<String, String> params = new HashMap<String, String>();
         if (args.length > 0) {
-            if (args[0].equalsIgnoreCase(Constants.HELP_TEXT)) {
-                CommonUtil.printHelp();
-            } else if (args[0].equalsIgnoreCase(Constants.CONFIG_TEXT) && args.length > 2) {
-                serverConfig = CommonUtil.loadServerConfig(args[1]);
-                CommonUtil.initialize(serverConfig.getSystemProperties());
-                serverConfig = CommonUtil.updatePasswords(serverConfig, args);
-                if (CommonUtil.argsLengthBeforePasswords(args) == 5 && args[2].equalsIgnoreCase(Constants.SEARCH_TEXT)) {
-                    if (args[4].equalsIgnoreCase(Constants.STARTS_WITH_TEXT)) {
-                        loggingService.listLogs(serverConfig, args[3], true);
-                    } else {
-                        CommonUtil.printSearchErrors();
+            String paramList[] = {Constants.CONFIG_TEXT, Constants.STARTS_WITH_TEXT, Constants.KEYSTORE_PASSWORD, Constants.USER_PASSWORD, Constants.SEARCH_TEXT, Constants.UPDATE_TEXT};
+            List tempList = Arrays.asList(args);
+            try {
+                for (String stringValue : paramList) {
+                    if (tempList.contains(stringValue)) {
+                        String value = null;
+                        if (stringValue.equals(Constants.STARTS_WITH_TEXT)) {
+                            value = "TRUE";
+                        } else {
+                            value = args[tempList.indexOf(stringValue) + 1];
+                        }
+                        params.put(stringValue, value);
                     }
-                } else if (CommonUtil.argsLengthBeforePasswords(args) == 4 && args[2].equalsIgnoreCase(Constants.SEARCH_TEXT)) {
-                    loggingService.listLogs(serverConfig, args[3], false);
-                } else if (CommonUtil.argsLengthBeforePasswords(args) == 4 && args[2].equalsIgnoreCase(Constants.UPDATE_TEXT)) {
-                    loggingService.updateLogs(serverConfig, CommonUtil.loadBulkLoggerConfig(args[3]));
                 }
-            } else if (args[0].equalsIgnoreCase(Constants.SEARCH_TEXT) && args.length > 1) {
-                serverConfig = CommonUtil.initializeWithEnv(serverConfig);
-                serverConfig = CommonUtil.updatePasswords(serverConfig, args);
-                if (CommonUtil.argsLengthBeforePasswords(args) == 2) {
-                    loggingService.listLogs(serverConfig, args[1], false);
-                } else if (CommonUtil.argsLengthBeforePasswords(args) == 3 && args[2].equalsIgnoreCase(Constants.STARTS_WITH_TEXT)) {
-                    loggingService.listLogs(serverConfig, args[1], true);
+            } catch (ArrayIndexOutOfBoundsException ex) {
+                if (tempList.contains(Constants.UPDATE_TEXT)) {
+                    CommonUtil.printUpdateErrors();
                 } else {
                     CommonUtil.printSearchErrors();
                 }
-            } else if (args[0].equalsIgnoreCase(Constants.UPDATE_TEXT) && args.length > 1) {
-                serverConfig = CommonUtil.initializeWithEnv(serverConfig);
-                serverConfig = CommonUtil.updatePasswords(serverConfig, args);
-                if (CommonUtil.argsLengthBeforePasswords(args) == 2) {
-                    loggingService.updateLogs(serverConfig, CommonUtil.loadBulkLoggerConfig(args[1]));
-                } else {
-                    CommonUtil.printUpdateErrors();
-                }
+            } catch (Exception e) {
+                CommonUtil.printCommonErrors();
             }
 
-        } else {
-            CommonUtil.printCommonErrors();
-        }
+            if (args[0].equalsIgnoreCase(Constants.HELP_TEXT)) {
+                CommonUtil.printHelp();
 
+            } else {
+
+                if (params.get(Constants.CONFIG_TEXT) != null) {
+                    serverConfig = CommonUtil.loadServerConfig(params.get(Constants.CONFIG_TEXT));
+                    CommonUtil.initialize(serverConfig.getSystemProperties());
+                    serverConfig = CommonUtil.updatePasswords(serverConfig, args);
+                } else {
+                    serverConfig = CommonUtil.initializeWithEnv(serverConfig);
+                    serverConfig = CommonUtil.updatePasswords(serverConfig, args);
+                }
+
+                if (params.get(Constants.SEARCH_TEXT) != null) {
+                    loggingService.listLogs(serverConfig, params.get(Constants.SEARCH_TEXT), params.get(Constants.STARTS_WITH_TEXT) != null);
+                } else if (params.get(Constants.UPDATE_TEXT) != null) {
+                    loggingService.updateLogs(serverConfig, CommonUtil.loadBulkLoggerConfig(params.get(Constants.UPDATE_TEXT)));
+                } else {
+                    CommonUtil.printCommonErrors();
+                }
+            }
+        }
     }
 }

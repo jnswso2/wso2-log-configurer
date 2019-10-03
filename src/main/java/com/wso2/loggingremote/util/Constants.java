@@ -11,11 +11,12 @@ public class Constants {
 
     public static final String DEFAULT_SERVER_CONFIG_FILE = "serverconfig.json";
     //arguments
+    public static final String SEARCH_TEXT = "search";
+    public static final String UPDATE_TEXT = "update";
+    //params
     public static final String HELP_TEXT = "--help";
     public static final String CONFIG_TEXT = "--config";
     public static final String STARTS_WITH_TEXT = "--starts-with";
-    public static final String SEARCH_TEXT = "search";
-    public static final String UPDATE_TEXT = "update";
     public static final String KEYSTORE_PASSWORD = "--kpassword";
     public static final String USER_PASSWORD = "--upassword";
 
