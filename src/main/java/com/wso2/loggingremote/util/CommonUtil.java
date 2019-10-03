@@ -168,6 +168,8 @@ public class CommonUtil {
         return configurations;
     }
 
+    // todo modify the code
+
     public static ServerConfig updatePasswords(ServerConfig config, String[] args) {
         for (int i = 0; i < args.length; i++) {
             if (args[i].equalsIgnoreCase(Constants.KEYSTORE_PASSWORD)) {
@@ -220,22 +222,35 @@ public class CommonUtil {
     }
 
     public static void printUpdateErrors() {
-        System.out.println("\nTo update logs use the following commands");
+        System.out.println();
+        System.out.print(Constants.ERROR_PRE_FIX);
+        System.out.println("To update logs use the following commands");
+        System.out.print(Constants.ERROR_PRE_FIX);
         System.out.println("\tjava -jar x.jar --config <serverconfig>.json update <updateloggers>.json");
+        System.out.print(Constants.ERROR_PRE_FIX);
         System.out.println("\tjava -jar x.jar update <updateloggers>.json");
+        System.out.print(Constants.ERROR_PRE_FIX);
         System.out.println("For more details run the application with --help");
     }
 
     public static void printSearchErrors() {
-        System.out.println("\nTo search for logs use the following commands");
+        System.out.println();
+        System.out.print(Constants.ERROR_PRE_FIX);
+        System.out.println("To search for logs use the following commands");
+        System.out.print(Constants.ERROR_PRE_FIX);
         System.out.println("\tjava -jar x.jar --config <serverconfig>.json search <search phrase>");
+        System.out.print(Constants.ERROR_PRE_FIX);
         System.out.println("\tjava -jar x.jar search <search phrase>");
+        System.out.print(Constants.ERROR_PRE_FIX);
         System.out.println("\tjava -jar x.jar search <search phrase> --starts-with");
+        System.out.print(Constants.ERROR_PRE_FIX);
         System.out.println("For more details run the application with --help");
     }
 
     public static void printCommonErrors() {
+        System.out.print(Constants.ERROR_PRE_FIX);
         System.out.println("Please provide a valid command");
+        System.out.print(Constants.ERROR_PRE_FIX);
         System.out.println("For more details run the application with --help");
     }
 }

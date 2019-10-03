@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="remotelogger" />
+        <module name="wso2-log-configurer" />
       </profile>
     </annotationProcessing>
   </component>

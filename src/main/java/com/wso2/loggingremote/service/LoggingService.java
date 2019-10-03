@@ -23,13 +23,16 @@ public class LoggingService {
             session = authclient.authenticate(configurations.getUsername(),
                     configurations.getPassword(), configurations.getHostname());
             if (session == null) {
+                System.out.print(Constants.ERROR_PRE_FIX);
                 System.out.println(Constants.LOGGING_IN_FAILED_TEXT);
                 return;
             }
         } catch (RemoteException e) {
+            System.out.print(Constants.ERROR_PRE_FIX);
             System.out.println(Constants.LOGGING_IN_FAILED_TEXT);
             return;
         } catch (LoginAuthenticationExceptionException e) {
+            System.out.print(Constants.ERROR_PRE_FIX);
             System.out.println(Constants.LOGGING_IN_FAILED_TEXT);
             return;
         }
@@ -76,9 +79,11 @@ public class LoggingService {
             }
             System.out.println("User authenticated successfully!");
         } catch (RemoteException e) {
+            System.out.print(Constants.ERROR_PRE_FIX);
             System.out.println(Constants.LOGGING_IN_FAILED_TEXT);
             return;
         } catch (LoginAuthenticationExceptionException e) {
+            System.out.print(Constants.ERROR_PRE_FIX);
             System.out.println(Constants.LOGGING_IN_FAILED_TEXT);
             return;
         }
@@ -98,12 +103,15 @@ public class LoggingService {
             authclient.logOut();
             System.out.println("User logged out successfully");
         } catch (AxisFault axisFault) {
+            System.out.print(Constants.ERROR_PRE_FIX);
             System.out.println("Updating failed!");
             return;
         } catch (RemoteException e) {
+            System.out.print(Constants.ERROR_PRE_FIX);
             System.out.println(Constants.LOGGING_OUT_FAILED_TEXT);
             return;
         } catch (LogoutAuthenticationExceptionException e) {
+            System.out.print(Constants.ERROR_PRE_FIX);
             System.out.println(Constants.LOGGING_OUT_FAILED_TEXT);
             return;
         }
@@ -112,10 +120,12 @@ public class LoggingService {
     private boolean updateLogsAbs(UpdateLoggerConfig loggerConfig, LoggingAdminServiceClient loggingAdminServiceClient) {
         boolean result = false;
         if (StringUtils.isEmpty(loggerConfig.getLoggerName())) {
+            System.out.print(Constants.ERROR_PRE_FIX);
             System.out.println("Specify logger name");
             return false;
         }
         if (StringUtils.isEmpty(loggerConfig.getLoggerLevel()) && loggerConfig.isAdditivity() == null) {
+            System.out.print(Constants.ERROR_PRE_FIX);
             System.out.println("Specify log level or additivity to update in logger " + loggerConfig.getLoggerName());
             return false;
         }
