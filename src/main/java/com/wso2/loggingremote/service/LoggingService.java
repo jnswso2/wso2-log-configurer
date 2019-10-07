@@ -18,49 +18,65 @@ public class LoggingService {
     public void listLogs(ServerConfig configurations, String logName, boolean startsWith) {
         LoginAdminServiceClient authclient;
         String session = "";
-        try {
-            authclient = new LoginAdminServiceClient(configurations.getHostname());
-            session = authclient.authenticate(configurations.getUsername(),
-                    configurations.getPassword(), configurations.getHostname());
-            if (session == null) {
+
+        String hostnames[] = configurations.getHostname().split(",");
+        for (String hostname : hostnames) {
+            System.out.println("-------------------------------------------------------------------------------------");
+            System.out.println("-------------------------------------------------------------------------------------");
+            System.out.println(" Host : " + hostname);
+            System.out.println();
+
+
+
+            try {
+                authclient = new LoginAdminServiceClient(hostname);
+                session = authclient.authenticate(configurations.getUsername(),
+                        configurations.getPassword(), hostname);
+                if (session == null) {
+                    System.out.print(Constants.ERROR_PRE_FIX);
+                    System.out.println(Constants.LOGGING_IN_FAILED_TEXT);
+                    return;
+                }
+            } catch (RemoteException e) {
+                System.out.print(Constants.ERROR_PRE_FIX);
+                System.out.println(Constants.LOGGING_IN_FAILED_TEXT);
+                return;
+            } catch (LoginAuthenticationExceptionException e) {
                 System.out.print(Constants.ERROR_PRE_FIX);
                 System.out.println(Constants.LOGGING_IN_FAILED_TEXT);
                 return;
             }
-        } catch (RemoteException e) {
-            System.out.print(Constants.ERROR_PRE_FIX);
-            System.out.println(Constants.LOGGING_IN_FAILED_TEXT);
-            return;
-        } catch (LoginAuthenticationExceptionException e) {
-            System.out.print(Constants.ERROR_PRE_FIX);
-            System.out.println(Constants.LOGGING_IN_FAILED_TEXT);
-            return;
-        }
 
-        try {
-            LoggingAdminServiceClient loggingAdminServiceClient = new LoggingAdminServiceClient(configurations.getHostname(), session);
-            LoggingAdminStub.GetAllLoggerDataResponse logDataList =
-                    loggingAdminServiceClient.searchByLogName(logName, startsWith);
+            try {
+                LoggingAdminServiceClient loggingAdminServiceClient = new LoggingAdminServiceClient(hostname, session);
+                LoggingAdminStub.GetAllLoggerDataResponse logDataList =
+                        loggingAdminServiceClient.searchByLogName(logName, startsWith);
 
-            if (logDataList.get_return() != null && logDataList.get_return().length > 0) {
-                System.out.println("Name\t\t\t|Level\t|Parent\t|Additivity");
+                if (logDataList.get_return() != null && logDataList.get_return().length > 0) {
+                    System.out.println(String.format("||%-80s|%-10s|%-30s|%-10s||", "Name","Level","Parent","Additivity"));
 
-                for (LoggingAdminStub.LoggerData logdata : logDataList.get_return()) {
-                    System.out.println(logdata.getName() + "\t|" + logdata.getLevel() + "\t|" + logdata.getParentName() + "\t|" + logdata.getAdditivity());
+                    for (LoggingAdminStub.LoggerData logdata : logDataList.get_return()) {
+                        System.out.println(String.format("||%-80s|%-10s|%-30s|%-10s||", logdata.getName(),logdata.getLevel(),logdata.getParentName(),logdata.getAdditivity()));
+                        //System.out.println(logdata.getName() + "\t|" + logdata.getLevel() + "\t|" + logdata.getParentName() + "\t|" + logdata.getAdditivity());
+                    }
+                } else {
+                    System.out.println("No matching loggers found");
                 }
-            } else {
-                System.out.println("No matching loggers found");
+                authclient.logOut();
+            } catch (AxisFault axisFault) {
+                System.out.println("Searching failed");
+                return;
+            } catch (RemoteException e) {
+                System.out.println(Constants.LOGGING_OUT_FAILED_TEXT);
+                return;
+            } catch (LogoutAuthenticationExceptionException e) {
+                System.out.println(Constants.LOGGING_OUT_FAILED_TEXT);
+                return;
             }
-            authclient.logOut();
-        } catch (AxisFault axisFault) {
-            System.out.println("Searching failed");
-            return;
-        } catch (RemoteException e) {
-            System.out.println(Constants.LOGGING_OUT_FAILED_TEXT);
-            return;
-        } catch (LogoutAuthenticationExceptionException e) {
-            System.out.println(Constants.LOGGING_OUT_FAILED_TEXT);
-            return;
+
+            System.out.println("-------------------------------------------------------------------------------------");
+            System.out.println("-------------------------------------------------------------------------------------");
+            System.out.println();
         }
     }
 
