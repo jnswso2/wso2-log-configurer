@@ -53,12 +53,18 @@ public class CommonUtil {
         }
         if (System.getenv(Constants.SERVER_HOSTNAME) != null) {
             config.setHostname(System.getenv(Constants.SERVER_HOSTNAME));
+        } else if (System.getProperty(Constants.SERVER_HOSTNAME) != null) {
+            config.setHostname(System.getProperty(Constants.SERVER_HOSTNAME));
         }
         if (System.getenv(Constants.SERVER_USERNAME) != null) {
             config.setHostname(System.getenv(Constants.SERVER_USERNAME));
+        } else if (System.getProperty(Constants.SERVER_USERNAME) != null) {
+            config.setHostname(System.getProperty(Constants.SERVER_USERNAME));
         }
         if (System.getenv(Constants.SERVER_PASSWORD) != null) {
             config.setHostname(System.getenv(Constants.SERVER_PASSWORD));
+        } else if (System.getProperty(Constants.SERVER_PASSWORD) != null) {
+            config.setHostname(System.getProperty(Constants.SERVER_PASSWORD));
         }
 
         return config;
@@ -215,7 +221,7 @@ public class CommonUtil {
         System.out.println("\nUsing --config you can specify server configuration from a custom location");
         System.out.println("If server configuration is not specified,");
         System.out.println("\t1. Configurations will be loaded from environment variables");
-        System.out.println("\t1. Missing configurations will be loaded from default configurations");
+        System.out.println("\t2. Missing configurations will be loaded from default configurations");
         System.out.println("\nIf you wish to pass the passwords with the arguments,");
         System.out.println("\tUse --upassword <user password> and --kpassword <keystore password> at the end of above commands");
         System.out.println("\teg: java -jar x.jar search AUDIT --upassword admin --kpassword wso2carbon");
