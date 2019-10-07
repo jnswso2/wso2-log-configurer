@@ -27,7 +27,6 @@ public class LoggingService {
             System.out.println();
 
 
-
             try {
                 authclient = new LoginAdminServiceClient(hostname);
                 session = authclient.authenticate(configurations.getUsername(),
@@ -53,10 +52,10 @@ public class LoggingService {
                         loggingAdminServiceClient.searchByLogName(logName, startsWith);
 
                 if (logDataList.get_return() != null && logDataList.get_return().length > 0) {
-                    System.out.println(String.format("||%-80s|%-10s|%-30s|%-10s||", "Name","Level","Parent","Additivity"));
+                    System.out.println(String.format("||%-80s|%-10s|%-30s|%-10s||", "Name", "Level", "Parent", "Additivity"));
 
                     for (LoggingAdminStub.LoggerData logdata : logDataList.get_return()) {
-                        System.out.println(String.format("||%-80s|%-10s|%-30s|%-10s||", logdata.getName(),logdata.getLevel(),logdata.getParentName(),logdata.getAdditivity()));
+                        System.out.println(String.format("||%-80s|%-10s|%-30s|%-10s||", logdata.getName(), logdata.getLevel(), logdata.getParentName(), logdata.getAdditivity()));
                         //System.out.println(logdata.getName() + "\t|" + logdata.getLevel() + "\t|" + logdata.getParentName() + "\t|" + logdata.getAdditivity());
                     }
                 } else {
@@ -83,54 +82,62 @@ public class LoggingService {
     public void updateLogs(ServerConfig serverConfig, UpdateLoggerConfig[] loggerBulkConfig) {
         LoginAdminServiceClient authclient;
         System.out.println("Logging service started..");
+        String hostnames[] = serverConfig.getHostname().split(",");
+        for (String hostname : hostnames) {
+            System.out.println("Updating the host : " + hostname);
 
-        String session = "";
-        try {
-            authclient = new LoginAdminServiceClient(serverConfig.getHostname());
-            session = authclient.authenticate(serverConfig.getUsername(),
-                    serverConfig.getPassword(), serverConfig.getHostname());
-            if (session == null) {
+            String session = "";
+            try {
+                authclient = new LoginAdminServiceClient(hostname);
+                session = authclient.authenticate(serverConfig.getUsername(),
+                        serverConfig.getPassword(), hostname);
+                if (session == null) {
+                    System.out.println(Constants.LOGGING_IN_FAILED_TEXT);
+                    return;
+                }
+                System.out.println("User authenticated successfully for " + hostname+ " !");
+            } catch (RemoteException e) {
+                System.out.print(Constants.ERROR_PRE_FIX);
+                System.out.println(Constants.LOGGING_IN_FAILED_TEXT);
+                return;
+            } catch (LoginAuthenticationExceptionException e) {
+                System.out.print(Constants.ERROR_PRE_FIX);
                 System.out.println(Constants.LOGGING_IN_FAILED_TEXT);
                 return;
             }
-            System.out.println("User authenticated successfully!");
-        } catch (RemoteException e) {
-            System.out.print(Constants.ERROR_PRE_FIX);
-            System.out.println(Constants.LOGGING_IN_FAILED_TEXT);
-            return;
-        } catch (LoginAuthenticationExceptionException e) {
-            System.out.print(Constants.ERROR_PRE_FIX);
-            System.out.println(Constants.LOGGING_IN_FAILED_TEXT);
-            return;
-        }
 
-        try {
-            System.out.println("Reading logger changes from file...");
-            LoggingAdminServiceClient loggingAdminServiceClient =
-                    new LoggingAdminServiceClient(serverConfig.getHostname(), session);
+            try {
+                System.out.println("Reading logger changes from file...");
+                LoggingAdminServiceClient loggingAdminServiceClient =
+                        new LoggingAdminServiceClient(hostname, session);
 
-            for (UpdateLoggerConfig loggerConfig : loggerBulkConfig) {
-                if(!updateLogsAbs(loggerConfig, loggingAdminServiceClient)){
-                    System.out.println(Constants.UPDATE_FAILED_TEXT);
+                for (UpdateLoggerConfig loggerConfig : loggerBulkConfig) {
+                    if (!updateLogsAbs(loggerConfig, loggingAdminServiceClient)) {
+                        System.out.println(Constants.UPDATE_FAILED_TEXT);
+                    }
                 }
-            }
 
-            System.out.println("Logs updated successfully!");
-            authclient.logOut();
-            System.out.println("User logged out successfully");
-        } catch (AxisFault axisFault) {
-            System.out.print(Constants.ERROR_PRE_FIX);
-            System.out.println("Updating failed!");
-            return;
-        } catch (RemoteException e) {
-            System.out.print(Constants.ERROR_PRE_FIX);
-            System.out.println(Constants.LOGGING_OUT_FAILED_TEXT);
-            return;
-        } catch (LogoutAuthenticationExceptionException e) {
-            System.out.print(Constants.ERROR_PRE_FIX);
-            System.out.println(Constants.LOGGING_OUT_FAILED_TEXT);
-            return;
+                System.out.println("Logs updated successfully for " + hostname +" !");
+                authclient.logOut();
+                System.out.println("User logged out successfully from " + hostname);
+            } catch (AxisFault axisFault) {
+                System.out.print(Constants.ERROR_PRE_FIX);
+                System.out.println("Updating failed!");
+                return;
+            } catch (RemoteException e) {
+                System.out.print(Constants.ERROR_PRE_FIX);
+                System.out.println(Constants.LOGGING_OUT_FAILED_TEXT);
+                return;
+            } catch (LogoutAuthenticationExceptionException e) {
+                System.out.print(Constants.ERROR_PRE_FIX);
+                System.out.println(Constants.LOGGING_OUT_FAILED_TEXT);
+                return;
+            }
+            System.out.println("\t\t\t...");
+            System.out.println("\n\n");
+
         }
+
     }
 
     private boolean updateLogsAbs(UpdateLoggerConfig loggerConfig, LoggingAdminServiceClient loggingAdminServiceClient) {
