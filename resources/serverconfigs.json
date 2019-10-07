@@ -1,11 +1,11 @@
 {
-    "hostname":"https://localhost:9440",
+    "hostname":"https://localhost:9443",
     "username":"admin",
     "password":"admin",
     "systemProperties" : [
         {
             "key":"javax.net.ssl.trustStore",
-            "value":"/engagements/mas/wso2-products/wso2ei-6.2.0/repository/resources/security/wso2carbon.jks"
+            "value":"<PRODUCT_HOME>/repository/resources/security/wso2carbon.jks"
         },
         {
             "key":"javax.net.ssl.trustStorePassword",
