@@ -81,7 +81,7 @@ public class LoggingService {
 
     public void updateLogs(ServerConfig serverConfig, UpdateLoggerConfig[] loggerBulkConfig) {
         LoginAdminServiceClient authclient;
-        System.out.println("Logging service started..");
+        System.out.println("Logging service started for update log levels");
         String hostnames[] = serverConfig.getHostname().split(",");
         for (String hostname : hostnames) {
             System.out.println("Updating the host : " + hostname);
@@ -97,14 +97,17 @@ public class LoggingService {
                 }
                 System.out.println("User authenticated successfully for " + hostname+ " !");
             } catch (RemoteException e) {
+                e.printStackTrace();
                 System.out.print(Constants.ERROR_PRE_FIX);
                 System.out.println(Constants.LOGGING_IN_FAILED_TEXT);
                 return;
             } catch (LoginAuthenticationExceptionException e) {
+                e.printStackTrace();
                 System.out.print(Constants.ERROR_PRE_FIX);
                 System.out.println(Constants.LOGGING_IN_FAILED_TEXT);
                 return;
             }
+
 
             try {
                 System.out.println("Reading logger changes from file...");
