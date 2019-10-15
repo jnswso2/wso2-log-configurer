@@ -38,11 +38,11 @@ public class LoggingService {
                 }
             } catch (RemoteException e) {
                 System.out.print(Constants.ERROR_PRE_FIX);
-                System.out.println(Constants.LOGGING_IN_FAILED_TEXT);
+                System.out.println(Constants.LOGGING_IN_FAILED_TEXT + " : " + e.getMessage());
                 return;
             } catch (LoginAuthenticationExceptionException e) {
                 System.out.print(Constants.ERROR_PRE_FIX);
-                System.out.println(Constants.LOGGING_IN_FAILED_TEXT);
+                System.out.println(Constants.LOGGING_IN_FAILED_TEXT + " : " + e.getMessage());
                 return;
             }
 
@@ -66,10 +66,10 @@ public class LoggingService {
                 System.out.println("Searching failed");
                 return;
             } catch (RemoteException e) {
-                System.out.println(Constants.LOGGING_OUT_FAILED_TEXT);
+                System.out.println(Constants.LOGGING_OUT_FAILED_TEXT + " : " + e.getMessage());
                 return;
             } catch (LogoutAuthenticationExceptionException e) {
-                System.out.println(Constants.LOGGING_OUT_FAILED_TEXT);
+                System.out.println(Constants.LOGGING_OUT_FAILED_TEXT + " : " + e.getMessage());
                 return;
             }
 
@@ -99,12 +99,12 @@ public class LoggingService {
             } catch (RemoteException e) {
                 e.printStackTrace();
                 System.out.print(Constants.ERROR_PRE_FIX);
-                System.out.println(Constants.LOGGING_IN_FAILED_TEXT);
+                System.out.println(Constants.LOGGING_IN_FAILED_TEXT + " : " + e.getMessage());
                 return;
             } catch (LoginAuthenticationExceptionException e) {
                 e.printStackTrace();
                 System.out.print(Constants.ERROR_PRE_FIX);
-                System.out.println(Constants.LOGGING_IN_FAILED_TEXT);
+                System.out.println(Constants.LOGGING_IN_FAILED_TEXT + " : " + e.getMessage());
                 return;
             }
 
@@ -125,15 +125,15 @@ public class LoggingService {
                 System.out.println("User logged out successfully from " + hostname);
             } catch (AxisFault axisFault) {
                 System.out.print(Constants.ERROR_PRE_FIX);
-                System.out.println("Updating failed!");
+                System.out.println(Constants.UPDATE_FAILED_TEXT + " : " + axisFault.getMessage());
                 return;
             } catch (RemoteException e) {
                 System.out.print(Constants.ERROR_PRE_FIX);
-                System.out.println(Constants.LOGGING_OUT_FAILED_TEXT);
+                System.out.println(Constants.LOGGING_OUT_FAILED_TEXT + " : " + e.getMessage());
                 return;
             } catch (LogoutAuthenticationExceptionException e) {
                 System.out.print(Constants.ERROR_PRE_FIX);
-                System.out.println(Constants.LOGGING_OUT_FAILED_TEXT);
+                System.out.println(Constants.LOGGING_OUT_FAILED_TEXT + " : " + e.getMessage());
                 return;
             }
             System.out.println("\t\t\t...");
