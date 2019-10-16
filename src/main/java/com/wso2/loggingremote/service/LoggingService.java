@@ -38,11 +38,11 @@ public class LoggingService {
                 }
             } catch (RemoteException e) {
                 System.out.print(Constants.ERROR_PRE_FIX);
-                System.out.println(Constants.LOGGING_IN_FAILED_TEXT);
+                System.out.println(Constants.LOGGING_IN_FAILED_TEXT + " : " + e.getMessage());
                 return;
             } catch (LoginAuthenticationExceptionException e) {
                 System.out.print(Constants.ERROR_PRE_FIX);
-                System.out.println(Constants.LOGGING_IN_FAILED_TEXT);
+                System.out.println(Constants.LOGGING_IN_FAILED_TEXT + " : " + e.getMessage());
                 return;
             }
 
@@ -66,10 +66,10 @@ public class LoggingService {
                 System.out.println("Searching failed");
                 return;
             } catch (RemoteException e) {
-                System.out.println(Constants.LOGGING_OUT_FAILED_TEXT);
+                System.out.println(Constants.LOGGING_OUT_FAILED_TEXT + " : " + e.getMessage());
                 return;
             } catch (LogoutAuthenticationExceptionException e) {
-                System.out.println(Constants.LOGGING_OUT_FAILED_TEXT);
+                System.out.println(Constants.LOGGING_OUT_FAILED_TEXT + " : " + e.getMessage());
                 return;
             }
 
@@ -81,7 +81,7 @@ public class LoggingService {
 
     public void updateLogs(ServerConfig serverConfig, UpdateLoggerConfig[] loggerBulkConfig) {
         LoginAdminServiceClient authclient;
-        System.out.println("Logging service started..");
+        System.out.println("Logging service started for update log levels");
         String hostnames[] = serverConfig.getHostname().split(",");
         for (String hostname : hostnames) {
             System.out.println("Updating the host : " + hostname);
@@ -97,14 +97,17 @@ public class LoggingService {
                 }
                 System.out.println("User authenticated successfully for " + hostname+ " !");
             } catch (RemoteException e) {
+                e.printStackTrace();
                 System.out.print(Constants.ERROR_PRE_FIX);
-                System.out.println(Constants.LOGGING_IN_FAILED_TEXT);
+                System.out.println(Constants.LOGGING_IN_FAILED_TEXT + " : " + e.getMessage());
                 return;
             } catch (LoginAuthenticationExceptionException e) {
+                e.printStackTrace();
                 System.out.print(Constants.ERROR_PRE_FIX);
-                System.out.println(Constants.LOGGING_IN_FAILED_TEXT);
+                System.out.println(Constants.LOGGING_IN_FAILED_TEXT + " : " + e.getMessage());
                 return;
             }
+
 
             try {
                 System.out.println("Reading logger changes from file...");
@@ -122,15 +125,15 @@ public class LoggingService {
                 System.out.println("User logged out successfully from " + hostname);
             } catch (AxisFault axisFault) {
                 System.out.print(Constants.ERROR_PRE_FIX);
-                System.out.println("Updating failed!");
+                System.out.println(Constants.UPDATE_FAILED_TEXT + " : " + axisFault.getMessage());
                 return;
             } catch (RemoteException e) {
                 System.out.print(Constants.ERROR_PRE_FIX);
-                System.out.println(Constants.LOGGING_OUT_FAILED_TEXT);
+                System.out.println(Constants.LOGGING_OUT_FAILED_TEXT + " : " + e.getMessage());
                 return;
             } catch (LogoutAuthenticationExceptionException e) {
                 System.out.print(Constants.ERROR_PRE_FIX);
-                System.out.println(Constants.LOGGING_OUT_FAILED_TEXT);
+                System.out.println(Constants.LOGGING_OUT_FAILED_TEXT + " : " + e.getMessage());
                 return;
             }
             System.out.println("\t\t\t...");

@@ -47,9 +47,33 @@ update <update-log>.json
 
 Create a json in the following format and save it as `serverconfig.json`
 
+For single server deployment
 ```json
 {
   "hostname":"https://localhost:9443",
+  "username":"admin",
+  "password":"admin",
+  "systemProperties" : [
+    {
+      "key":"javax.net.ssl.trustStore",
+      "value":"<PATH>/wso2carbon.jks"
+    },
+    {
+      "key":"javax.net.ssl.trustStorePassword",
+      "value": "wso2carbon"
+    },
+    {
+      "key":"javax.net.ssl.trustStoreType",
+      "value":"JKS"
+    }
+  ]
+}
+```
+or clustered environment
+
+```json
+{
+  "hostname":"https://localhost:9443,https://localhost:9444,https://localhost:9445",
   "username":"admin",
   "password":"admin",
   "systemProperties" : [
@@ -148,3 +172,10 @@ Search
 
 Update
 ![](readmeresources/update-default-config.gif)
+
+Search in cluster
+![](readmeresources/search-cluster.gif)
+
+Update a cluster
+![](readmeresources/update-cluster.gif)
+
