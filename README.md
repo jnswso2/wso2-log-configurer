@@ -16,8 +16,8 @@ Use the terminal and go to the home file location
 
 Execute the command ``mvn clean package``
 
-Find the `wso2-log-configurer.jar` jar file inside the `target` directory which
-you can copy to a preferred location in your file system.
+Find the `wso2-log-configurer.zip` zip file inside the `target` directory which
+you can copy to a preferred location in your file system. Then Extract the content. You will find a `resource` folder and `wso2-log-configurer.jar` file inside the zip file.
 
 ### Run
 
