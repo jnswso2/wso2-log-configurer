@@ -5,7 +5,7 @@
   "systemProperties": [
     {
       "key": "javax.net.ssl.trustStore",
-      "value": "wso2carbon.jks"
+      "value": "resources/wso2carbon.jks"
     },
     {
       "key": "javax.net.ssl.trustStorePassword",
